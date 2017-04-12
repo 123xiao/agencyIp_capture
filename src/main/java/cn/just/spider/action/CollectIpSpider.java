@@ -28,7 +28,7 @@ public class CollectIpSpider {
 		String password = "root";
 		Connection conn = null;
 		try {
-			Class.forName(driver); // classLoader,¼ÓÔØ¶ÔÓ¦Çý¶¯
+			Class.forName(driver); // classLoader,ï¿½ï¿½ï¿½Ø¶ï¿½Ó¦ï¿½ï¿½
 			conn = (Connection) DriverManager.getConnection(url, username, password);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -44,21 +44,21 @@ public class CollectIpSpider {
 
 			public void run() {
 				for (int i = 0; i < ipTypeUrl.length; i++) {
-					final Document parse = Jsoup.parse(SpiderHttpUtils.readHtml(ipTypeUrl[i])); // ½øÈëÀàÐÍÏêÇéÒ³
+					final Document parse = Jsoup.parse(SpiderHttpUtils.readHtml(ipTypeUrl[i])); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³
 					Integer page = Integer.valueOf(parse
 							.select("body > div.con.PT20 > div.conl > div.lbtc.l > div.page > div > ul > li:nth-child(9) > span > strong:nth-child(1)")
-							.text());// »ñÈ¡ÀàÐÍÓÐ¶àÉÙÒ³
-					System.err.println("Ð¤" + ipTypeUrl[i] + "ÓÐ" + page + "Ò³");
+							.text());// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½Ò³
+					System.err.println(ipTypeUrl[i] + "ï¿½ï¿½" + page + "Ò³");
 					for (int j = 1; j <= page; j++) {
 						final Document parse2 = Jsoup
-								.parse(SpiderHttpUtils.readHtml(ipTypeUrl[i] + "/list_" + j + ".html"));// ·ÖÒ³´ò¿ª
+								.parse(SpiderHttpUtils.readHtml(ipTypeUrl[i] + "/list_" + j + ".html"));// ï¿½ï¿½Ò³ï¿½ï¿½
 						executor.execute(new Runnable() {
 
 							public void run() {
-								System.out.println(Thread.currentThread().getName() + "ÕýÔÚÖ´ÐÐ¡£¡£¡£");
+								System.out.println(Thread.currentThread().getName() + "ï¿½ï¿½ï¿½ï¿½Ö´ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½");
 								Elements select = parse2
 										.select("body > div.con.PT20 > div.conl > div.lbtc.l > div.chunlist");
-								Elements select2 = select.select("a");// »ñÈ¡Êý¾ÝÏêÇéÒ³
+								Elements select2 = select.select("a");// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³
 
 								for (Element element : select2) {
 
@@ -68,7 +68,7 @@ public class CollectIpSpider {
 									Integer valueOf = 0;
 									if (text != null && !"".equals(text)) {
 										try {
-											valueOf = Integer.valueOf(text.substring(1, text.length() - 2));// ½ØÈ¡¶àÉÙÒ³
+											valueOf = Integer.valueOf(text.substring(1, text.length() - 2));// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Ò³
 										} catch (Exception e) {
 											System.out.println(text + "125814");
 										}
@@ -76,7 +76,7 @@ public class CollectIpSpider {
 									}
 
 									String attr = element.attr("href");
-									attr = attr.substring(attr.lastIndexOf("/"), attr.indexOf(".html"));// »ñÈ¡µ½·ÖÒ³Á´½Ó
+									attr = attr.substring(attr.lastIndexOf("/"), attr.indexOf(".html"));// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½
 
 									for (int k = 1; k <= valueOf; k++) {
 										Document parse3 = null;
@@ -87,7 +87,7 @@ public class CollectIpSpider {
 													.readHtml(element.attr("href").replace(attr, attr + "_" + k)));
 										}
 										Elements select3 = parse3.select(
-												"body > div.con.PT20 > div.conl > div.lbtc.l > div.arc > div.content");// »ñÈ¡µ½Êý¾Ý
+												"body > div.con.PT20 > div.conl > div.lbtc.l > div.arc > div.content");// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½
 										for (Element element2 : select3) {
 											String[] split = element2.html().split("<br> ");
 											for (int l = 0; l < split.length; l++) {
@@ -113,7 +113,7 @@ public class CollectIpSpider {
 	}
 
 	/**
-	 * »ñÈ¡ÓÐ´úÀíËÄ¸öÀàÐÍIP
+	 * ï¿½ï¿½È¡ï¿½Ð´ï¿½ï¿½ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½IP
 	 * 
 	 * @return
 	 */
