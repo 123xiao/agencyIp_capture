@@ -16,7 +16,11 @@ import com.mysql.jdbc.PreparedStatement;
 
 import cn.just.spider.entity.CollectIp;
 import cn.just.spider.util.SpiderHttpUtils;
-
+/**
+ * 
+ * @author xiaoguokang
+ *
+ */
 public class CollectIpSpider {
 	private final static String URL = "http://www.youdaili.net/";
 	private final static Executor executor = Executors.newCachedThreadPool();
@@ -28,7 +32,7 @@ public class CollectIpSpider {
 		String password = "root";
 		Connection conn = null;
 		try {
-			Class.forName(driver); // classLoader,���ض�Ӧ��
+			Class.forName(driver); // classLoader,加载对应驱动
 			conn = (Connection) DriverManager.getConnection(url, username, password);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -44,21 +48,21 @@ public class CollectIpSpider {
 
 			public void run() {
 				for (int i = 0; i < ipTypeUrl.length; i++) {
-					final Document parse = Jsoup.parse(SpiderHttpUtils.readHtml(ipTypeUrl[i])); // ������������ҳ
+					final Document parse = Jsoup.parse(SpiderHttpUtils.readHtml(ipTypeUrl[i])); // 进入类型详情页
 					Integer page = Integer.valueOf(parse
 							.select("body > div.con.PT20 > div.conl > div.lbtc.l > div.page > div > ul > li:nth-child(9) > span > strong:nth-child(1)")
-							.text());// ��ȡ�����ж���ҳ
-					System.err.println(ipTypeUrl[i] + "��" + page + "ҳ");
+							.text());// 获取类型有多少页
+					System.err.println(ipTypeUrl[i] + "有" + page + "页");
 					for (int j = 1; j <= page; j++) {
 						final Document parse2 = Jsoup
-								.parse(SpiderHttpUtils.readHtml(ipTypeUrl[i] + "/list_" + j + ".html"));// ��ҳ��
+								.parse(SpiderHttpUtils.readHtml(ipTypeUrl[i] + "/list_" + j + ".html"));// 分页打开
 						executor.execute(new Runnable() {
 
 							public void run() {
-								System.out.println(Thread.currentThread().getName() + "����ִ�С�����");
+								System.out.println(Thread.currentThread().getName() + "正在执行。。。");
 								Elements select = parse2
 										.select("body > div.con.PT20 > div.conl > div.lbtc.l > div.chunlist");
-								Elements select2 = select.select("a");// ��ȡ�������ҳ
+								Elements select2 = select.select("a");// 获取数据详情页
 
 								for (Element element : select2) {
 
@@ -68,7 +72,7 @@ public class CollectIpSpider {
 									Integer valueOf = 0;
 									if (text != null && !"".equals(text)) {
 										try {
-											valueOf = Integer.valueOf(text.substring(1, text.length() - 2));// ��ȡ����ҳ
+											valueOf = Integer.valueOf(text.substring(1, text.length() - 2));// 截取多少页
 										} catch (Exception e) {
 											System.out.println(text + "125814");
 										}
@@ -76,7 +80,7 @@ public class CollectIpSpider {
 									}
 
 									String attr = element.attr("href");
-									attr = attr.substring(attr.lastIndexOf("/"), attr.indexOf(".html"));// ��ȡ����ҳ����
+									attr = attr.substring(attr.lastIndexOf("/"), attr.indexOf(".html"));// 获取到分页链接
 
 									for (int k = 1; k <= valueOf; k++) {
 										Document parse3 = null;
@@ -87,7 +91,7 @@ public class CollectIpSpider {
 													.readHtml(element.attr("href").replace(attr, attr + "_" + k)));
 										}
 										Elements select3 = parse3.select(
-												"body > div.con.PT20 > div.conl > div.lbtc.l > div.arc > div.content");// ��ȡ�����
+												"body > div.con.PT20 > div.conl > div.lbtc.l > div.arc > div.content");// 获取到数据
 										for (Element element2 : select3) {
 											String[] split = element2.html().split("<br> ");
 											for (int l = 0; l < split.length; l++) {
@@ -113,7 +117,7 @@ public class CollectIpSpider {
 	}
 
 	/**
-	 * ��ȡ�д����ĸ�����IP
+	 * 获取有代理四个类型IP
 	 * 
 	 * @return
 	 */
